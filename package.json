@@ -1,0 +1,27 @@
+{
+  "name": "aof2",
+  "version": "0.1.0",
+  "description": "Ferramenta de geração de respostas para devoluções imotivadas de AOF",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rammyres/aof2.git"
+  },
+  "keywords": [
+    "aof"
+  ],
+  "author": "Rammyres Pereira",
+  "license": "GPL-2.0-only",
+  "bugs": {
+    "url": "https://github.com/rammyres/aof2/issues"
+  },
+  "homepage": "https://github.com/rammyres/aof2#readme",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "oracledb": "^6.3.0"
+  }
+}

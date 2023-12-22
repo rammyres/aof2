@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Menu Dropdown Vacilos</title>
+</head>
+<body>
+  <h1>Menu Dropdown Vacilos</h1>
+  
+  <select id="vacilosDropdown">
+    <% dropdownMenu.forEach(item => { %>
+      <option value="<%= item.value %>"><%= item.text %></option>
+    <% }); %>
+  </select>
+
+  <script>
+    // Exemplo de manipulação do menu dropdown no lado do cliente (JavaScript)
+    const dropdown = document.getElementById('vacilosDropdown');
+    dropdown.addEventListener('change', function() {
+      console.log('Valor selecionado:', this.value);
+      console.log('Texto selecionado:', this.options[this.selectedIndex].text);
+    });
+  </script>
+</body>
+</html>
