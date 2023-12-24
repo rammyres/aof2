@@ -1,0 +1,28 @@
+{
+    "vacilos":[
+        {
+            "tipo": "formulario_ir", 
+            "descricao": "Isenção de IR não preenchida no formulário",
+            "alerta": "Verifique se o levantamento diz respeito a um RPV ou precatório federal, caso positivo a marcação no formulário é obrigatória",
+            "texto": "Conforme IN 147-1 12.9 e IN 147-2 14.1.2.5.7, a marcação e o formulário de dispensa só são exigíveis para levantamento de precatórios e RPV."
+        },
+        {
+            "tipo": "formulario_antigo", 
+            "descricao": "Formulário antigo/desatualizado usado",
+            "alerta": "O formulário precisa ter todas as informações para identificação do beneficiário, independentemente da versão",
+            "texto": "Atentar para o Resolve 7287201, aberto pela rede de DIOPE, sobre uso de versões antigas do forulário de levantamento."
+        },
+        {
+            "tipo":"id_sisbajud",
+            "descricao": "Conta não localizada, ID começada por 07",
+            "alerta": "Se a ID informada no alvará inicia por 07 é uma ID SISBAJUD",
+            "texto": "A ID informada para levantamento é uma ID SISBAJUD e seu uso como dado para resgate está normatizado na IN 147-1 14.1.8.1.2. Para localizar a conta correspondente use opção 41-19-11 do DJO, conforme IN 147-2 9.1.1.8 ou proceda o levantamento simplificado, conforme IN 147-2 14.2.4.3."
+        },
+        {
+            "tipo":"id_deposito",
+            "descricao": "Conta não localizada, ID começada por 08",
+            "alerta": "Se a ID informada no alvará inicia por 08 é uma ID Depósito (boleto ou tribunal)",
+            "texto": "A ID informada para levantamento é uma ID Depósito e seu uso como dado para resgate está normatizado na IN 147-1 14.1.8.1.2. Para localizar a conta correspondente use as opções de 11 a 15, sub-opção 16-11-2 do DJO ou proceda o levantamento simplificado, conforme IN 147-2 14.2.4.3."
+        }
+    ]
+}

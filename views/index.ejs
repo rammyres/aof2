@@ -1,24 +1,182 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Menu Dropdown Vacilos</title>
-</head>
-<body>
-  <h1>Menu Dropdown Vacilos</h1>
+  <title>Devoluções imotivadas AOF</title>
   
-  <select id="vacilosDropdown">
-    <% dropdownMenu.forEach(item => { %>
-      <option value="<%= item.value %>"><%= item.text %></option>
-    <% }); %>
-  </select>
+    <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .container {
+      width: 80%;
+      max-width: 600px;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    select,
+    input[type="text"],
+    textarea,
+    button {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    #justificativa {
+      max-width: 700px;
+    }
+    #alerta {
+      display: none;
+      background-color: #ffeeba;
+      color: #c85609;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+
+    #alerta p {
+      margin: 0;
+    }
+
+    button {
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+      max-width: 20%;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  
+  </style>
+</head>
+
+<body>
+  <h1>Devoluções Imotivadas - AOF</h1>
+  <div>
+    <select id="vacilosDropdown">
+      <% dropdownMenu.forEach(item => { %>
+        <option value="<%= item.value %>"><%= item.text %></option>
+      <% }); %>
+    </select>
+    <div id="alerta" style="display: none;">
+      <p id="mensagemAlerta"></p>
+    </div>
+  </div>  
+  <div>
+    <label for="numeroAOF">Número AOF:</label> 
+    <input type="text" id="numeroAOF" placeholder="0000/000000000">
+  </div>
+  
+  <div>
+    <label for="justificativa">Justificativa (até 1000 caracteres):</label>
+    <br/>
+    <textarea id="justificativa" maxlength="1000" rows="5"></textarea> <!-- Campo para a justificativa -->
+  </div>
+
+  <button id="enviarBtn">Enviar</button>
+
+  <a href="/novo-tipo">
+    Incluir ou excluir tipos de devolução
+  </a>
 
   <script>
-    // Exemplo de manipulação do menu dropdown no lado do cliente (JavaScript)
-    const dropdown = document.getElementById('vacilosDropdown');
-    dropdown.addEventListener('change', function() {
-      console.log('Valor selecionado:', this.value);
-      console.log('Texto selecionado:', this.options[this.selectedIndex].text);
+    const numeroAOFInput = document.getElementById('numeroAOF');
+    const vacilosDropdown = document.getElementById('vacilosDropdown');
+    const alertaDiv = document.getElementById('alerta');
+    const justificativaInput = document.getElementById('justificativa');
+    const mensagemAlerta = document.getElementById('mensagemAlerta');
+
+    vacilosDropdown.addEventListener('change', async function(event) {
+      const tipoSelecionado = this.value;
+      if (tipoSelecionado) {
+        try {
+          const response = await fetch(`/alerta?tipo=${tipoSelecionado}`);
+          const data = await response.json();
+  
+          if (data.alerta) {
+            mensagemAlerta.textContent = data.alerta;
+            alertaDiv.style.display = 'block';
+          } else {
+            alertaDiv.style.display = 'none';
+          }
+        } catch (error) {
+          console.error('Erro ao buscar o alerta:', error);
+        }
+      } else {
+        alertaDiv.style.display = 'none';
+      }
+      if (vacilosDropdown.value !== '') {
+      enviarBtn.style.display = 'block'; // Exibe o botão enviar se o valor for diferente de vazio
+      } else {
+        enviarBtn.style.display = 'none'; // Oculta o botão enviar se o valor for vazio
+        }
+  
     });
+    // Código JavaScript existente para o dropdown e exibição do alerta...
+    numeroAOFInput.addEventListener('input', function(event) {
+      let value = this.value.replace(/\D/g, ''); // Remove caracteres não numéricos
+      if (value.length > 4) {
+        value = value.substring(0, 4) + '/' + value.substring(4);
+      }
+      if (value.length > 13) {
+        value = value.substring(0, 13);
+      }
+      this.value = value;
+    });
+
+    // Validação do formato ao perder o foco
+    numeroAOFInput.addEventListener('blur', function(event) {
+      if (!this.validity.valid || this.value.length !== 13) {
+        alert('Formato inválido. Insira no formato: 0000/000000000');
+        this.value = '';
+        this.focus();
+      }
+    });
+    
+    // Redirecionamento ao clicar no botão "Enviar"
+    const enviarBtn = document.getElementById('enviarBtn');
+    enviarBtn.addEventListener('click', function(event) {
+      const tipoSelecionado = vacilosDropdown.value;
+      const numeroAOF = numeroAOFInput.value;
+      const justificativa = justificativaInput.value; // Obtém o conteúdo do campo de justificativa
+
+      if (tipoSelecionado && numeroAOF && justificativa) { // Verifica se todos os valores estão presentes
+        window.location.href = `/texto?tipo=${tipoSelecionado}&numeroAOF=${numeroAOF}&justificativa=${encodeURIComponent(justificativa)}`;
+      } else {
+        alert('Preencha todos os campos!');
+      }
+    });
+
+    // Restante do código para formatar o input do número AOF...
+  </script>
+</body>
+</html>
+
   </script>
 </body>
 </html>

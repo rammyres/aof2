@@ -21,6 +21,7 @@
   "homepage": "https://github.com/rammyres/aof2#readme",
   "dependencies": {
     "dotenv": "^16.3.1",
+    "ejs": "^3.1.9",
     "express": "^4.18.2",
     "oracledb": "^6.3.0"
   }

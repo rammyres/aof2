@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Texto de resposta</title>
+  <style>
+    /* Estilos gerais */
+body {
+  font-family: Arial, sans-serif; /* Exemplo de fonte, substitua pela fonte desejada */
+  margin: 0;
+  padding: 0;
+  background-color: #f0f0f0; /* Cor de fundo para toda a página */
+  color: #333; /* Cor do texto padrão */
+}
+
+/* Estilo do cabeçalho */
+header {
+  background-color: #FF0000; /* Cor do cabeçalho (exemplo: vermelho) */
+  color: #FFFFFF; /* Cor do texto do cabeçalho */
+  padding: 20px;
+  text-align: center;
+}
+
+/* Estilo do menu dropdown */
+#vacilosDropdown {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc; /* Borda para o dropdown */
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+/* Estilo do alerta */
+#alerta {
+  background-color: #FFFF00; /* Cor do alerta (exemplo: amarelo) */
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+/* Estilo do campo Número AOF */
+#numeroAOF {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc; /* Borda para o campo Número AOF */
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+/* Estilo do botão Enviar */
+#enviarBtn {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #FF0000; /* Cor do botão (exemplo: vermelho) */
+  color: #FFFFFF; /* Cor do texto do botão */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Estilo para a página de texto */
+h1, p {
+  margin-bottom: 15px;
+}
+
+/* Estilo do botão Copiar Texto */
+#copiarBtn {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #FF0000; /* Cor do botão (exemplo: vermelho) */
+  color: #FFFFFF; /* Cor do texto do botão */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Estilo para a página de resposta */
+footer {
+  background-color: #FF0000; /* Cor do rodapé (exemplo: vermelho) */
+  color: #FFFFFF; /* Cor do texto do rodapé */
+  text-align: center;
+  padding: 10px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+  </style>
+
+</head>
+<body>
+  <p>O AOF <%= numeroAOF %> foi devolvido sob a seguinte justificativa</p>
+  <p><%= justificativa %></p>
+  <p><strong>Texto:</strong> <%= texto %></p>
+  
+  <!-- Botão para copiar o conteúdo -->
+  <button id="copiarBtn">Copiar Texto</button>
+
+  <script>
+    const copiarBtn = document.getElementById('copiarBtn');
+
+    copiarBtn.addEventListener('click', function() {
+      const range = document.createRange();
+      const selection = window.getSelection();
+      const textoParaCopiar = document.body;
+
+      range.selectNodeContents(textoParaCopiar);
+      selection.removeAllRanges();
+      selection.addRange(range);
+
+      try {
+        document.execCommand('copy');
+        selection.removeAllRanges();
+        alert('Conteúdo copiado para a área de transferência!');
+      } catch (err) {
+        console.error('Erro ao copiar o texto: ', err);
+        alert('Ocorreu um erro ao copiar o texto.');
+      }
+    });
+  </script>
+</body>
+</html>

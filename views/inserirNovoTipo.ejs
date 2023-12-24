@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Inserir novo tipo de devolução comum</title>
+  <style>
+    /* Estilo para o body e a fonte */
+    body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    }
+
+    /* Estilo para o título */
+    h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    }
+
+    /* Estilo para o formulário */
+    form {
+    max-width: 400px;
+    margin: 0 auto;
+    }
+
+    /* Estilo para os labels */
+    label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    }
+
+    /* Estilo para os inputs */
+    input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    }
+
+    /* Estilo para o botão */
+    button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    }
+
+    /* Estilo para o botão quando passa o mouse */
+    button:hover {
+    background-color: #45a049;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    /* Estilo para as células do cabeçalho da tabela */
+    th {
+      background-color: #f2f2f2;
+    }
+
+    /* Estilo para o botão de exclusão */
+    .btn-excluir {
+      padding: 5px 10px;
+      background-color: #f44336;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    /* Estilo para o botão de exclusão quando passa o mouse */
+    .btn-excluir:hover {
+      background-color: #d32f2f;
+    }
+
+  </style>
+</head>
+<body>
+
+    <table>
+        <thead>
+          <tr>
+            <th>Tipo</th>
+            <th>Descrição</th>
+            <th>Alerta</th>
+            <th>Texto de orientação</th>
+            <th>Ação</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% vacilos.forEach(vacilo => { %>
+            <tr>
+              <td><%= vacilo[0] %></td>
+              <td><%= vacilo[1] %></td>
+              <td><%= vacilo[2] %></td>
+              <td><%= vacilo[3] %></td>
+              <td><button class="btn-excluir" onclick="excluirVacilo('<%= vacilo[0] %>')">Excluir</button></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+
+  <h1>Novo tipo de devolução imotivada comum</h1>
+  <form action="/inserir-novo-tipo" method="post">
+    <label>Tipo</label><input type="text" name="tipo" placeholder="Tipo"><br>
+    <label>Descrição</label><input type="text" name="descricao" placeholder="Descrição"><br>
+    <label>Alerta</label><input type="text" name="alerta" placeholder="Alerta"><br>
+    <label>Texto de orientação</label><input type="text" name="texto" placeholder="Texto"><br>
+    <button type="submit">Inserir novo tipo</button>
+  </form>
+
+  <script>
+    // Função para enviar a solicitação de exclusão
+    function excluirVacilo(tipo) {
+      if (confirm('Tem certeza de que deseja excluir este vacilo?')) {
+        // Enviar uma solicitação para a rota de exclusão
+        fetch(`/excluir-vacilo?tipo=${tipo}`, {
+          method: 'DELETE',
+        })
+        .then(response => {
+          if (response.ok) {
+            // Recarregar a página após a exclusão
+            window.location.reload();
+          } else {
+            throw new Error('Erro ao excluir vacilo');
+          }
+        })
+        .catch(error => {
+          console.error('Erro:', error);
+          alert('Erro ao excluir vacilo');
+        });
+      }
+    }
+  </script>
+  
+</body>
+</html>
