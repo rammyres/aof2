@@ -78,6 +78,8 @@
       background-color: #d32f2f;
     }
 
+    
+
   </style>
 </head>
 <body>
@@ -104,18 +106,19 @@
           <% }); %>
         </tbody>
       </table>
+<div>
+    <h1>Novo tipo de devolução imotivada comum</h1>
+    <form action="/inserir-novo-tipo" method="post">
+        <label>Tipo</label><input type="text" name="tipo" placeholder="Tipo"><br>
+        <label>Descrição</label><input type="text" name="descricao" placeholder="Descrição"><br>
+        <label>Alerta</label><input type="text" name="alerta" placeholder="Alerta"><br>
+        <label>Texto de orientação</label><input type="text" name="texto" placeholder="Texto"><br>
+        <button type="submit">Inserir novo tipo</button>
+    </form>
+    <button onclick="window.history.back()" id="voltar">Voltar</button>
 
-  <h1>Novo tipo de devolução imotivada comum</h1>
-  <form action="/inserir-novo-tipo" method="post">
-    <label>Tipo</label><input type="text" name="tipo" placeholder="Tipo"><br>
-    <label>Descrição</label><input type="text" name="descricao" placeholder="Descrição"><br>
-    <label>Alerta</label><input type="text" name="alerta" placeholder="Alerta"><br>
-    <label>Texto de orientação</label><input type="text" name="texto" placeholder="Texto"><br>
-    <button type="submit">Inserir novo tipo</button>
-    <button onclick="window.history.back()">Voltar</button>
-  </form>
+</div>
   
-
   <script>
     // Função para enviar a solicitação de exclusão
     function excluirVacilo(tipo) {
