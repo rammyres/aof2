@@ -104,8 +104,6 @@ app.get('/texto', async (req, res) => {
   try {
     // Estabelece a conexão com o banco de dados
     connection = await oracledb.getConnection(dbConfig);
-    console.log(prefixo);
-    console.log(parseInt(prefixo));
 
     //Insere a devolução no BD para fins estatisticos
     const insersao = connection.execute(`INSERT INTO AOFS (aof, prefixo, tipo, data_devolucao)
