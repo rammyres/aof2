@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Devoluções imotivadas AOF</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   
     <style>
     body {
@@ -61,6 +62,10 @@
       margin: 0;
     }
 
+    #prefixo {
+      max-width: 15%;
+    }
+
     button {
       background-color: #007bff;
       color: #fff;
@@ -76,6 +81,28 @@
 </head>
 
 <body>
+  <div class="modal" id="modalColetaDados" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Informação sobre Coleta de Dados</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Esta ferramente coleta numero AOF, prefixo e tipo de devolução para fins estatisticos.</p>
+          <p>Clique em 'OK' para continuar.</p>
+          <label>
+            <input type="checkbox" id="aceitarDefinitivamenteCheckbox"> Não mostrar novamente
+          </label>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" id="btnAceitar" data-dismiss="modal">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <h1>Devoluções Imotivadas - AOF</h1>
   <div>
     <select id="vacilosDropdown">
@@ -90,6 +117,10 @@
   <div>
     <label for="numeroAOF">Número AOF:</label> 
     <input type="text" id="numeroAOF" placeholder="0000/000000000">
+  </div>
+  <div>
+    <label for="prefixo">Prefixo PSO/CENOP:</label> 
+    <input type="text" id="prefixo" placeholder="0000">
   </div>
   
   <div>
@@ -108,6 +139,7 @@
     const numeroAOFInput = document.getElementById('numeroAOF');
     const vacilosDropdown = document.getElementById('vacilosDropdown');
     const alertaDiv = document.getElementById('alerta');
+    const prefixoInput = document.getElementById('prefixo');
     const justificativaInput = document.getElementById('justificativa');
     const mensagemAlerta = document.getElementById('mensagemAlerta');
 
@@ -143,19 +175,28 @@
       if (value.length > 4) {
         value = value.substring(0, 4) + '/' + value.substring(4);
       }
-      if (value.length > 13) {
-        value = value.substring(0, 13);
+      if (value.length > 14) {
+        value = value.substring(0, 14);
       }
       this.value = value;
     });
 
     // Validação do formato ao perder o foco
     numeroAOFInput.addEventListener('blur', function(event) {
-      if (!this.validity.valid || this.value.length !== 13) {
+      if (!this.validity.valid || this.value.length !== 14) {
         alert('Formato inválido. Insira no formato: 0000/000000000');
         this.value = '';
         this.focus();
       }
+    });
+
+    prefixoInput.addEventListener('blur', function(event){
+      if(!this.validity.validity.valid || this.valid.length !== 4){
+        alert('Formato do prefixo inválido. Insira no formato 0000');
+        this.value == '';
+        this.focus();
+      }
+
     });
     
     // Redirecionamento ao clicar no botão "Enviar"
@@ -164,16 +205,51 @@
       const tipoSelecionado = vacilosDropdown.value;
       const numeroAOF = numeroAOFInput.value;
       const justificativa = justificativaInput.value; // Obtém o conteúdo do campo de justificativa
+      const prefixo = prefixoInput.value;
 
       if (tipoSelecionado && numeroAOF && justificativa) { // Verifica se todos os valores estão presentes
-        window.location.href = `/texto?tipo=${tipoSelecionado}&numeroAOF=${numeroAOF}&justificativa=${encodeURIComponent(justificativa)}`;
+        window.location.href = `/texto?tipo=${tipoSelecionado}&numeroAOF=${numeroAOF}&justificativa=${encodeURIComponent(justificativa)}&prefixo=${prefixo}`;
       } else {
         alert('Preencha todos os campos!');
       }
     });
-
-    // Restante do código para formatar o input do número AOF...
   </script>
+   
+  <script>
+    // Função para verificar se o usuário aceitou definitivamente e esconder o modal
+    function verificarAceiteDefinitivo() {
+      const aceitarDefinitivamenteCheckbox = document.getElementById('aceitarDefinitivamenteCheckbox');
+      if (aceitarDefinitivamenteCheckbox.checked) {
+        localStorage.setItem('aofAceiteDefinitivo', 'true'); // Salva no armazenamento local do navegador
+      }
+    }
+
+    window.onload = function() {
+      const aceiteDefinitivo = localStorage.getItem('aofAceiteDefinitivo');
+      const modalColetaDados = document.getElementById('modalColetaDados');
+
+      // Verifica se o usuário já aceitou definitivamente para não exibir o modal novamente
+      if (aceiteDefinitivo === 'true') {
+        modalColetaDados.style.display = 'none'; // Esconde o modal
+      } else {
+        $('#modalColetaDados').modal('show'); // Mostra o modal
+      }
+
+      // Ao clicar no botão 'OK' do modal
+      const btnAceitar = document.getElementById('btnAceitar');
+      btnAceitar.addEventListener('click', function() {
+        verificarAceiteDefinitivo();
+      });
+
+      // Ao fechar o modal sem aceitar definitivamente
+      modalColetaDados.addEventListener('hidden.bs.modal', function() {
+        verificarAceiteDefinitivo();
+      });
+    };
+  </script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
 

@@ -98,11 +98,26 @@ app.get('/texto', async (req, res) => {
   const tipoSelecionado = req.query.tipo;
   const numeroAOF = req.query.numeroAOF; 
   const justificativa = req.query.justificativa;
+  const prefixo = req.query.prefixo;
   let connection;
 
   try {
     // Estabelece a conexão com o banco de dados
     connection = await oracledb.getConnection(dbConfig);
+    console.log(prefixo);
+    console.log(parseInt(prefixo));
+
+    //Insere a devolução no BD para fins estatisticos
+    const insersao = connection.execute(`INSERT INTO AOFS (aof, prefixo, tipo, data_devolucao)
+    SELECT :numeroAOF, :prefixo, :tipoSelecionado, SYSDATE
+    FROM dual
+    WHERE NOT EXISTS (
+        SELECT 1
+        FROM AOFS
+        WHERE aof = :numeroAOF
+    )`, [numeroAOF, parseInt(prefixo), tipoSelecionado, numeroAOF]
+    ); 
+    connection.commit();
 
     // Consulta SQL para recuperar o texto correspondente ao tipo selecionado
     const query = `SELECT texto FROM vacilos WHERE tipo = :tipoSelecionado`;
