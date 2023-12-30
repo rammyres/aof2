@@ -4,7 +4,7 @@
   <title>Devoluções imotivadas AOF</title>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   
-    <style>
+  <style>
     body {
       font-family: Arial, sans-serif;
       background-color: #f4f4f4;
@@ -20,7 +20,7 @@
     }
 
     .container {
-      width: 80%;
+      width: 90%;
       max-width: 600px;
       background-color: #fff;
       padding: 20px;
@@ -44,11 +44,11 @@
 
     label {
       font-weight: bold;
+      text-align: left;
+      display: block;
+      margin-bottom: 5px;
     }
 
-    #justificativa {
-      max-width: 700px;
-    }
     #alerta {
       display: none;
       background-color: #ffeeba;
@@ -56,27 +56,23 @@
       padding: 10px;
       border-radius: 5px;
       margin-bottom: 10px;
+      text-align: center;
     }
 
-    #alerta p {
-      margin: 0;
-    }
-
-    #prefixo {
-      max-width: 15%;
+    #justificativa {
+      min-width: 400px;
     }
 
     button {
       background-color: #007bff;
       color: #fff;
       cursor: pointer;
-      max-width: 20%;
+      max-width: 15%;
     }
 
     button:hover {
       background-color: #0056b3;
     }
-  
   </style>
 </head>
 
@@ -113,19 +109,20 @@
     <div id="alerta" style="display: none;">
       <p id="mensagemAlerta"></p>
     </div>
-  </div>  
+  </div>
+  <br/>  
   <div>
     <label for="numeroAOF">Número AOF:</label> 
     <input type="text" id="numeroAOF" placeholder="0000/000000000">
   </div>
+  <br/>
   <div>
     <label for="prefixo">Prefixo PSO/CENOP:</label> 
     <input type="text" id="prefixo" placeholder="0000">
   </div>
-  
+  <br/>
   <div>
     <label for="justificativa">Justificativa (até 1000 caracteres):</label>
-    <br/>
     <textarea id="justificativa" maxlength="1000" rows="5"></textarea> <!-- Campo para a justificativa -->
   </div>
 
