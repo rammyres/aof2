@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const oracledb = require('oracledb');
 const path = require('path');
+const Chart = require('chart.js');
 
 const app = express();
 const port = 3000;
@@ -238,6 +239,113 @@ app.delete('/excluir-vacilo', async (req, res) => {
   }
 });
 
+// Rota para renderizar o dashboard
+app.get('/dashboard', async (req, res) => {
+  let connection;
+
+  try {
+    // Estabelece a conexão com o banco de dados
+    connection = await oracledb.getConnection(dbConfig);
+
+    // Consulta SQL para contar devoluções por mês
+    const queryDevolucoesPorMes = `
+      SELECT TO_CHAR(data_devolucao, 'YYYY-MM') AS mes, COUNT(*) AS total_devolucoes
+      FROM AOFS
+      GROUP BY TO_CHAR(data_devolucao, 'YYYY-MM')
+      ORDER BY TO_CHAR(data_devolucao, 'YYYY-MM')
+    `;
+
+    // Executa a consulta SQL
+    const resultDevolucoesPorMes = await connection.execute(queryDevolucoesPorMes);
+
+    // Consulta SQL para contar devoluções por prefixo
+    const queryDevolucoesPorPrefixo = `
+      SELECT prefixo, COUNT(*) AS total_devolucoes
+      FROM AOFS
+      GROUP BY prefixo
+      ORDER BY prefixo
+    `;
+
+    // Executa a consulta SQL
+    const resultDevolucoesPorPrefixo = await connection.execute(queryDevolucoesPorPrefixo);
+
+    // Transforma os resultados em um formato adequado para o gráfico de pizza (pie chart)
+    const dadosGraficoPizza = {
+      labels: resultDevolucoesPorPrefixo.rows.map(row => `Prefixo ${row[0]}`),
+      datasets: [{
+        data: resultDevolucoesPorPrefixo.rows.map(row => row[1]),
+        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#8A2BE2', '#00FF7F'],
+        hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#8A2BE2', '#00FF7F']
+      }]
+    };
+
+    // Renderiza a página dashboard.ejs e passa os dados para os gráficos
+    res.render('dashboard', { 
+      devolucoesPorMes: resultDevolucoesPorMes.rows,
+      dadosGraficoPizza: JSON.stringify(dadosGraficoPizza)
+    });
+  } catch (error) {
+    console.error('Erro ao buscar dados para o dashboard:', error);
+    res.status(500).send('Erro ao buscar dados para o dashboard');
+  } finally {
+    // Libera a conexão com o banco de dados
+    if (connection) {
+      try {
+        await connection.close();
+      } catch (error) {
+        console.error('Erro ao fechar a conexão com o banco de dados:', error);
+      }
+    }
+  }
+});
+
+// Rota para fornecer dados para o gráfico de pizza
+app.get('/dados-grafico', async (req, res) => {
+  let connection;
+
+  try {
+    // Estabelece a conexão com o banco de dados
+    connection = await oracledb.getConnection(dbConfig);
+
+    // Consulta SQL para contar devoluções por prefixo
+    const queryDevolucoesPorPrefixo = `
+      SELECT prefixo, COUNT(*) AS total_devolucoes
+      FROM AOFS
+      GROUP BY prefixo
+      ORDER BY prefixo
+    `;
+
+    // Executa a consulta SQL
+    const resultDevolucoesPorPrefixo = await connection.execute(queryDevolucoesPorPrefixo);
+
+    // Formatando os dados no formato necessário para o gráfico de pizza
+    const labels = resultDevolucoesPorPrefixo.rows.map(row => `Prefixo ${row[0]}`);
+    const data = resultDevolucoesPorPrefixo.rows.map(row => row[1]);
+
+    const dadosGraficoPizza = {
+      labels: labels,
+      datasets: [{
+        data: data,
+        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#8A2BE2', '#00FF7F'],
+        hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#8A2BE2', '#00FF7F']
+      }]
+    };
+
+    res.json(dadosGraficoPizza);
+  } catch (error) {
+    console.error('Erro ao buscar dados para o gráfico de pizza:', error);
+    res.status(500).json({ error: 'Erro ao buscar dados para o gráfico de pizza' });
+  } finally {
+    // Libera a conexão com o banco de dados
+    if (connection) {
+      try {
+        await connection.close();
+      } catch (error) {
+        console.error('Erro ao fechar a conexão com o banco de dados:', error);
+      }
+    }
+  }
+});
 
 
 // Inicia o servidor Express

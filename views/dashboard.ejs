@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        
+        h1{
+            text-align: center;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .dev-container {
+            flex: 1;
+            background-color: #e1f5fe;
+            border-radius: 10px;
+            padding: 20px;
+            margin-right: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .graph-container {
+            flex: 1;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        h1 {
+            color: #333;
+        }
+        
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        ul li {
+            margin-bottom: 5px;
+        }
+        
+        canvas {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-top: 20px;
+            border-radius: 10px;
+        }
+        
+    </style>
+  <title>Dashboard de Devoluções</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <h1>Dashboard de Devoluções</h1>
+
+  <div class="container">
+    <div class="dev-container">
+      <h2>Devoluções por Mês</h2>
+      <ul>
+        <% devolucoesPorMes.forEach(row => { %>
+          <li><%= row[0] %>: <%= row[1] %> devoluções</li>
+        <% }); %>
+      </ul>
+    </div>
+
+    <div class="graph-container">
+      <h2>Devoluções por Prefixo (Gráfico de Pizza)</h2>
+      <canvas id="graficoPizza"></canvas>
+    </div>
+  </div>
+
+  <script>
+    // Carrega os dados do gráfico de pizza da rota /dados-grafico
+    fetch('/dados-grafico')
+      .then(response => response.json())
+      .then(dadosGraficoPizza => {
+        const ctx = document.getElementById('graficoPizza').getContext('2d');
+        new Chart(ctx, {
+          type: 'pie',
+          data: dadosGraficoPizza,
+          options: {}
+        });
+      })
+      .catch(error => console.error('Erro ao buscar dados do gráfico:', error));
+  </script>
+</body>
+</html>

@@ -106,27 +106,31 @@
         <option value="<%= item.value %>"><%= item.text %></option>
       <% }); %>
     </select>
+
     <div id="alerta" style="display: none;">
       <p id="mensagemAlerta"></p>
     </div>
   </div>
-  <br/>  
-  <div>
-    <label for="numeroAOF">Número AOF:</label> 
-    <input type="text" id="numeroAOF" placeholder="0000/000000000">
-  </div>
-  <br/>
-  <div>
-    <label for="prefixo">Prefixo PSO/CENOP:</label> 
-    <input type="text" id="prefixo" placeholder="0000">
-  </div>
-  <br/>
-  <div>
-    <label for="justificativa">Justificativa (até 1000 caracteres):</label>
-    <textarea id="justificativa" maxlength="1000" rows="5"></textarea> <!-- Campo para a justificativa -->
-  </div>
 
-  <button id="enviarBtn">Enviar</button>
+  
+  <br/>  
+  <!-- Inputs estilizados do Bootstrap -->
+<div class="form-group">
+  <label for="numeroAOF">Número AOF:</label>
+  <input type="text" class="form-control" id="numeroAOF" placeholder="0000/000000000">
+</div>
+
+<div class="form-group">
+  <label for="prefixo">Prefixo PSO/CENOP:</label>
+  <input type="text" class="form-control" id="prefixo" placeholder="0000">
+</div>
+
+<div class="form-group">
+  <label for="justificativa">Justificativa (até 1000 caracteres):</label>
+  <textarea class="form-control" id="justificativa" maxlength="1000" rows="5"></textarea>
+</div>
+
+<button type="button" class="btn btn-primary" id="enviarBtn">Enviar</button>
 
   <a href="/novo-tipo">
     Incluir ou excluir tipos de devolução
