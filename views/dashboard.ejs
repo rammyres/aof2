@@ -75,30 +75,49 @@
       <h2>Devoluções por Mês</h2>
       <ul>
         <% devolucoesPorMes.forEach(row => { %>
-          <li><%= row[0] %>: <%= row[1] %> devoluções</li>
+            <li><%= row[0] %>: <%= row[1] %> <%= row[1] === 1 ? "devolução" : "devoluções"; %></li>
         <% }); %>
       </ul>
     </div>
 
-    <div class="graph-container">
+    <div class="graph-container" id="graficoPrefixo">
       <h2>Devoluções por Prefixo</h2>
-      <canvas id="graficoPizza"></canvas>
+      <canvas id="graficoPizzaPrefixo"></canvas>
+    </div>
+
+    <div class="graph-container" id="graficoTipo">    
+        <h2>Devoluções por Tipo</h2>
+        <canvas id="graficoPizzaTipo"></canvas>
     </div>
   </div>
 
   <script>
-    // Carrega os dados do gráfico de pizza da rota /dados-grafico
-    fetch('/dados-grafico')
+
+    // Carrega os dados do gráfico de pizza da rota /dados-grafico-prefixo
+    fetch('/dados-grafico-prefixo')
       .then(response => response.json())
-      .then(dadosGraficoPizza => {
-        const ctx = document.getElementById('graficoPizza').getContext('2d');
+      .then(dadosGraficoPizzaPrefixo => {
+        const ctx = document.getElementById('graficoPizzaPrefixo').getContext('2d');
         new Chart(ctx, {
           type: 'pie',
-          data: dadosGraficoPizza,
+          data: dadosGraficoPizzaPrefixo,
+          options: {}
+        });
+      })
+      .catch(error => console.error('Erro ao buscar dados do gráfico:', error));
+      
+      fetch('/dados-grafico-tipo')
+      .then(response => response.json())
+      .then(dadosGraficoPizzaTipo => {
+        const ctx = document.getElementById('graficoPizzaTipo').getContext('2d');
+        new Chart(ctx, {
+          type: 'pie',
+          data: dadosGraficoPizzaTipo,
           options: {}
         });
       })
       .catch(error => console.error('Erro ao buscar dados do gráfico:', error));
   </script>
+
 </body>
 </html>

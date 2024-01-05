@@ -209,7 +209,7 @@ app.post('/inserir-novo-tipo', async (req, res) => {
 });
 
 // Rota para excluir um vacilo
-app.delete('/excluir-vacilo', async (req, res) => {
+app.delete('/excluir-tipo', async (req, res) => {
   const tipo = req.query.tipo;
   let connection;
 
@@ -299,8 +299,8 @@ app.get('/dashboard', async (req, res) => {
   }
 });
 
-// Rota para fornecer dados para o gráfico de pizza
-app.get('/dados-grafico', async (req, res) => {
+// Rota para fornecer dados para o gráfico de pizza por prefixos
+app.get('/dados-grafico-prefixo', async (req, res) => {
   let connection;
 
   try {
@@ -347,6 +347,53 @@ app.get('/dados-grafico', async (req, res) => {
   }
 });
 
+// Rota para fornecer dados para o gráfico de pizza por tipo
+app.get('/dados-grafico-tipo', async (req, res) => {
+  let connection;
+
+  try {
+    // Estabelece a conexão com o banco de dados
+    connection = await oracledb.getConnection(dbConfig);
+
+    // Consulta SQL para contar devoluções por prefixo
+    const queryDevolucoesPorPrefixo = `
+      SELECT tipo, COUNT(*) AS total_devolucoes
+      FROM AOFS
+      GROUP BY tipo
+      ORDER BY tipo
+    `;
+
+    // Executa a consulta SQL
+    const resultDevolucoesPorPrefixo = await connection.execute(queryDevolucoesPorPrefixo);
+
+    // Formatando os dados no formato necessário para o gráfico de pizza
+    const labels = resultDevolucoesPorPrefixo.rows.map(row => `tipo ${row[0]}`);
+    const data = resultDevolucoesPorPrefixo.rows.map(row => row[1]);
+
+    const dadosGraficoPizza = {
+      labels: labels,
+      datasets: [{
+        data: data,
+        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#8A2BE2', '#00FF7F'],
+        hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#8A2BE2', '#00FF7F']
+      }]
+    };
+
+    res.json(dadosGraficoPizza);
+  } catch (error) {
+    console.error('Erro ao buscar dados para o gráfico de pizza:', error);
+    res.status(500).json({ error: 'Erro ao buscar dados para o gráfico de pizza' });
+  } finally {
+    // Libera a conexão com o banco de dados
+    if (connection) {
+      try {
+        await connection.close();
+      } catch (error) {
+        console.error('Erro ao fechar a conexão com o banco de dados:', error);
+      }
+    }
+  }
+});
 
 // Inicia o servidor Express
 app.listen(port, () => {
