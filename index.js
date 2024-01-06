@@ -160,8 +160,8 @@ app.get('/novo-tipo', async (req, res) => {
     // Renderiza a página inserirNovoTipo.ejs e passa os dados da tabela para exibição
     res.render('inserirNovoTipo', { vacilos: result.rows });
   } catch (error) {
-    console.error('Erro ao buscar dados da tabela vacilos:', error);
-    res.status(500).send('Erro ao buscar os dados da tabela vacilos');
+    console.error('Erro ao buscar dados da tabela tipos:', error);
+    res.status(500).send('Erro ao buscar os dados da tabela tipo');
   } finally {
     // Libera a conexão com o banco de dados
     if (connection) {
@@ -194,8 +194,8 @@ app.post('/inserir-novo-tipo', async (req, res) => {
 
     res.redirect('/'); // Redireciona de volta para a página inicial após a inserção bem-sucedida
   } catch (error) {
-    console.error('Erro ao inserir novo vacilo:', error);
-    res.status(500).send('Erro ao inserir novo vacilo');
+    console.error('Erro ao inserir novo tipo:', error);
+    res.status(500).send('Erro ao inserir novo tipo');
   } finally {
     // Libera a conexão com o banco de dados
     if (connection) {
@@ -225,8 +225,8 @@ app.delete('/excluir-tipo', async (req, res) => {
 
     res.sendStatus(200); // Envie um status 200 para indicar sucesso
   } catch (error) {
-    console.error('Erro ao excluir vacilo:', error);
-    res.status(500).send('Erro ao excluir vacilo');
+    console.error('Erro ao excluir tipo:', error);
+    res.status(500).send('Erro ao excluir tipo');
   } finally {
     // Libera a conexão com o banco de dados
     if (connection) {
