@@ -208,6 +208,46 @@ app.post('/inserir-novo-tipo', async (req, res) => {
   }
 });
 
+// Rota para atualizar um vacilo
+// Rota para atualizar um vacilo
+app.put('/atualizar-tipo', async (req, res) => {
+  const tipo = req.query.tipo;
+  const descricao = req.query.descricao;
+  const alerta = req.query.alerta;
+  const texto = req.query.texto;
+  // const { descricao, alerta, texto } = req.body;
+  let connection;
+
+  try {
+    // Estabelece a conexão com o banco de dados
+    connection = await oracledb.getConnection(dbConfig);
+
+    // Query SQL para atualizar um vacilo existente
+    await connection.execute(
+      `UPDATE VACILOS SET DESCRICAO = :descricao, ALERTA = :alerta, TEXTO = :texto WHERE TIPO = :tipo`,
+      [descricao, alerta, texto, tipo]
+    );
+
+    await connection.commit();
+
+    res.sendStatus(200); // Envie um status 200 para indicar sucesso
+  } catch (error) {
+    console.error('Erro ao atualizar tipo:', error);
+    res.status(500).send('Erro ao atualizar tipo');
+  } finally {
+    // Libera a conexão com o banco de dados
+    if (connection) {
+      try {
+        await connection.close();
+      } catch (error) {
+        console.error('Erro ao fechar a conexão com o banco de dados:', error);
+      }
+    }
+  }
+});
+
+
+
 // Rota para excluir um vacilo
 app.delete('/excluir-tipo', async (req, res) => {
   const tipo = req.query.tipo;

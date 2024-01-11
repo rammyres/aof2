@@ -95,14 +95,20 @@
         <tbody>
           <% vacilos.forEach(vacilo => { %>
             <tr>
-              <td><%= vacilo[0] %></td>
-              <td><%= vacilo[1] %></td>
-              <td><%= vacilo[2] %></td>
-              <td><%= vacilo[3] %></td>
-              <td><button class="btn-excluir" onclick="excluirVacilo('<%= vacilo[0] %>')">Excluir</button></td>
+              <td><span class="tipo"><%= vacilo[0] %></span><input type="text" class="edit-tipo" value="<%= vacilo[0] %>" style="display:none;"></td>
+              <td><span class="descricao"><%= vacilo[1] %></span><input type="text" class="edit-descricao" value="<%= vacilo[1] %>" style="display:none;"></td>
+              <td><span class="alerta"><%= vacilo[2] %></span><input type="text" class="edit-alerta" value="<%= vacilo[2] %>" style="display:none;"></td>
+              <td><span class="texto"><%= vacilo[3] %></span><input type="text" class="edit-texto" value="<%= vacilo[3] %>" style="display:none;"></td>
+              <td>
+                <button class="btn-editar" onclick="editarVacilo(this)">Editar</button>
+                <button class="btn-salvar" onclick="salvarVacilo(this)" style="display:none;">Salvar</button>
+                <button class="btn-cancelar" onclick="cancelarEdicao(this)" style="display:none;">Cancelar</button>
+                <button class="btn-excluir" onclick="excluirVacilo('<%= vacilo[0] %>')">Excluir</button>
+              </td>
             </tr>
           <% }); %>
         </tbody>
+        
       </table>
 <div>
     <h1>Novo tipo de devolução imotivada comum</h1>
@@ -139,6 +145,55 @@
         });
       }
     }
+
+    function editarVacilo(btn) {
+    const row = btn.closest('tr');
+    row.querySelectorAll('span').forEach(span => span.style.display = 'none');
+    row.querySelectorAll('input').forEach(input => input.style.display = 'block');
+    row.querySelector('.btn-editar').style.display = 'none';
+    row.querySelector('.btn-salvar').style.display = 'inline-block';
+    row.querySelector('.btn-cancelar').style.display = 'inline-block';
+  }
+
+  // Função para salvar as alterações
+  function salvarVacilo(btn) {
+    const row = btn.closest('tr');
+    const tipo = row.querySelector('.edit-tipo').value;
+    const descricao = row.querySelector('.edit-descricao').value;
+    const alerta = row.querySelector('.edit-alerta').value;
+    const texto = row.querySelector('.edit-texto').value;
+
+    // Enviar uma solicitação para a rota de atualização
+    fetch(`/atualizar-tipo?tipo=${tipo}&descricao=${descricao}&alerta=${alerta}&texto=${encodeURIComponent(texto)}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ tipo, descricao, alerta, texto }),
+    })
+    .then(response => {
+      if (response.ok) {
+        // Recarregar a página após a atualização
+        window.location.reload();
+      } else {
+        throw new Error('Erro ao salvar tipo');
+      }
+    })
+    .catch(error => {
+      console.error('Erro:', error);
+      alert('Erro ao salvar tipo');
+    });
+  }
+
+  // Função para cancelar a edição
+  function cancelarEdicao(btn) {
+    const row = btn.closest('tr');
+    row.querySelectorAll('span').forEach(span => span.style.display = 'inline-block');
+    row.querySelectorAll('input').forEach(input => input.style.display = 'none');
+    row.querySelector('.btn-editar').style.display = 'inline-block';
+    row.querySelector('.btn-salvar').style.display = 'none';
+    row.querySelector('.btn-cancelar').style.display = 'none';
+  }
   </script>
   
 </body>
