@@ -359,7 +359,7 @@ app.get('/dados-grafico-prefixo', async (req, res) => {
     const resultDevolucoesPorPrefixo = await connection.execute(queryDevolucoesPorPrefixo);
 
     // Formatando os dados no formato necessário para o gráfico de pizza
-    const labels = resultDevolucoesPorPrefixo.rows.map(row => `Prefixo ${row[0]}`);
+    const labels = resultDevolucoesPorPrefixo.rows.map(row => ` ${row[0]}`);
     const data = resultDevolucoesPorPrefixo.rows.map(row => row[1]);
 
     const dadosGraficoPizza = {
@@ -407,7 +407,7 @@ app.get('/dados-grafico-tipo', async (req, res) => {
     const resultDevolucoesPorPrefixo = await connection.execute(queryDevolucoesPorPrefixo);
 
     // Formatando os dados no formato necessário para o gráfico de pizza
-    const labels = resultDevolucoesPorPrefixo.rows.map(row => `tipo ${row[0]}`);
+    const labels = resultDevolucoesPorPrefixo.rows.map(row => ` ${row[0]}`);
     const data = resultDevolucoesPorPrefixo.rows.map(row => row[1]);
 
     const dadosGraficoPizza = {
