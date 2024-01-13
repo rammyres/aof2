@@ -107,15 +107,19 @@ app.get('/texto', async (req, res) => {
     connection = await oracledb.getConnection(dbConfig);
 
     //Insere a devolução no BD para fins estatisticos
-    const insersao = connection.execute(`INSERT INTO AOFS (aof, prefixo, tipo, data_devolucao)
-    SELECT :numeroAOF, :prefixo, :tipoSelecionado, SYSDATE
-    FROM dual
-    WHERE NOT EXISTS (
-        SELECT 1
-        FROM AOFS
-        WHERE aof = :numeroAOF
-    )`, [numeroAOF, parseInt(prefixo), tipoSelecionado, numeroAOF]
-    ); 
+    const insersao = connection.execute(`
+    INSERT INTO AOFS (aof, prefixo, tipo, data_devolucao, sequencial)
+    SELECT
+      :numeroAOF,
+      :prefixo,
+      :tipoSelecionado,
+      SYSDATE,
+      COALESCE(MAX(sequencial) + 1, 1) -- Incrementa o sequencial se o AOF já existir, ou define como 1 se for o primeiro
+    FROM AOFS
+    WHERE aof = :numeroAOF
+`, [numeroAOF, parseInt(prefixo), tipoSelecionado, numeroAOF]
+);
+
     connection.commit();
 
     // Consulta SQL para recuperar o texto correspondente ao tipo selecionado
