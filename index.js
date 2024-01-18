@@ -316,7 +316,7 @@ app.get('/dashboard', async (req, res) => {
       SELECT prefixo, COUNT(*) AS total_devolucoes
       FROM AOFS
       GROUP BY prefixo
-      ORDER BY prefixo
+      ORDER BY prefixo['#FF6384', '#36A2EB', '#FFCE56', '#8A2BE2', '#00FF7F'],
     `;
 
     // Executa a consulta SQL
@@ -327,8 +327,8 @@ app.get('/dashboard', async (req, res) => {
       labels: resultDevolucoesPorPrefixo.rows.map(row => `Prefixo ${row[0]}`),
       datasets: [{
         data: resultDevolucoesPorPrefixo.rows.map(row => row[1]),
-        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#8A2BE2', '#00FF7F'],
-        hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#8A2BE2', '#00FF7F']
+        backgroundColor:  Array.from({ length: resultDevolucoesPorPrefixo.rows.length }, () => getRandomColor()),
+        hoverBackgroundColor:  Array.from({ length: resultDevolucoesPorPrefixo.rows.length }, () => getRandomColor()),
       }]
     };
 
@@ -427,8 +427,8 @@ app.get('/dados-grafico-tipo', async (req, res) => {
       labels: labels,
       datasets: [{
         data: data,
-        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#8A2BE2', '#00FF7F'],
-        hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#8A2BE2', '#00FF7F']
+        backgroundColor:  Array.from({ length: resultDevolucoesPorTipo.rows.length }, () => getRandomColor()),
+        hoverBackgroundColor:  Array.from({ length: resultDevolucoesPorTipo.rows.length }, () => getRandomColor()),
       }]
     };
 
