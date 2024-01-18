@@ -308,29 +308,29 @@ app.get('/dashboard', async (req, res) => {
       ORDER BY TO_CHAR(data_devolucao, 'YYYY-MM')
     `;
 
-    // Executa a consulta SQL
-    const resultDevolucoesPorMes = await connection.execute(queryDevolucoesPorMes);
+    // // Executa a consulta SQL
+    // const resultDevolucoesPorMes = await connection.execute(queryDevolucoesPorMes);
 
-    // Consulta SQL para contar devoluções por prefixo
-    const queryDevolucoesPorPrefixo = `
-      SELECT prefixo, COUNT(*) AS total_devolucoes
-      FROM AOFS
-      GROUP BY prefixo
-      ORDER BY prefixo['#FF6384', '#36A2EB', '#FFCE56', '#8A2BE2', '#00FF7F'],
-    `;
+    // // Consulta SQL para contar devoluções por prefixo
+    // const queryDevolucoesPorPrefixo = `
+    //   SELECT prefixo, COUNT(*) AS total_devolucoes
+    //   FROM AOFS
+    //   GROUP BY prefixo
+    //   ORDER BY prefixo,
+    // `;
 
-    // Executa a consulta SQL
-    const resultDevolucoesPorPrefixo = await connection.execute(queryDevolucoesPorPrefixo);
+    // // Executa a consulta SQL
+    // const resultDevolucoesPorPrefixo = await connection.execute(queryDevolucoesPorPrefixo);
 
-    // Transforma os resultados em um formato adequado para o gráfico de pizza (pie chart)
-    const dadosGraficoPizza = {
-      labels: resultDevolucoesPorPrefixo.rows.map(row => `Prefixo ${row[0]}`),
-      datasets: [{
-        data: resultDevolucoesPorPrefixo.rows.map(row => row[1]),
-        backgroundColor:  Array.from({ length: resultDevolucoesPorPrefixo.rows.length }, () => getRandomColor()),
-        hoverBackgroundColor:  Array.from({ length: resultDevolucoesPorPrefixo.rows.length }, () => getRandomColor()),
-      }]
-    };
+    // // Transforma os resultados em um formato adequado para o gráfico de pizza (pie chart)
+    // const dadosGraficoPizza = {
+    //   labels: resultDevolucoesPorPrefixo.rows.map(row => `Prefixo ${row[0]}`),
+    //   datasets: [{
+    //     data: resultDevolucoesPorPrefixo.rows.map(row => row[1]),
+    //     backgroundColor:  Array.from({ length: resultDevolucoesPorPrefixo.rows.length }, () => getRandomColor()),
+    //     hoverBackgroundColor:  Array.from({ length: resultDevolucoesPorPrefixo.rows.length }, () => getRandomColor()),
+    //   }]
+    // };
 
     // Renderiza a página dashboard.ejs e passa os dados para os gráficos
     res.render('dashboard', { 
