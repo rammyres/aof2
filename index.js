@@ -401,10 +401,10 @@ app.get('/dados-grafico-tipo', async (req, res) => {
 
     // Consulta SQL para contar devoluções por prefixo
     const queryDevolucoesPorPrefixo = `
-      SELECT tipo, COUNT(*) AS total_devolucoes
+      SELECT DESCRICAO, COUNT(*) AS total_devolucoes
       FROM AOFS
-      GROUP BY tipo
-      ORDER BY tipo
+      GROUP BY DESCRICAO
+      ORDER BY DESCRICAO
     `;
 
     // Executa a consulta SQL
