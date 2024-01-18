@@ -7,13 +7,15 @@ const Chart = require('chart.js');
 const app = express();
 const port = 3000;
 
-const getRandomColor = () => {
-  const letters = '0123456789ABCDEF';
-  let color = '#';
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
+const getArrayOfColors = (numColors) => {
+  const uniqueColors = new Set();
+  
+  while (uniqueColors.size < numColors) {
+    const color = `#${Math.floor(Math.random()*16777215).toString(16)}`;
+    uniqueColors.add(color);
   }
-  return color;
+  
+  return Array.from(uniqueColors);
 };
 
 app.use(express.urlencoded({ extended: true }));
@@ -323,12 +325,13 @@ app.get('/dashboard', async (req, res) => {
     const resultDevolucoesPorPrefixo = await connection.execute(queryDevolucoesPorPrefixo);
 
     // // Transforma os resultados em um formato adequado para o gráfico de pizza (pie chart)
+    cores = getArrayOfColors(resultDevolucoesPorPrefixo.rows.length);
     const dadosGraficoPizza = {
       labels: resultDevolucoesPorPrefixo.rows.map(row => `Prefixo ${row[0]}`),
       datasets: [{
         data: resultDevolucoesPorPrefixo.rows.map(row => row[1]),
-        backgroundColor:  Array.from({ length: resultDevolucoesPorPrefixo.rows.length }, () => getRandomColor()),
-        hoverBackgroundColor:  Array.from({ length: resultDevolucoesPorPrefixo.rows.length }, () => getRandomColor()),
+        backgroundColor: cores,
+        hoverBackgroundColor:  cores,
       }]
     };
 
@@ -376,7 +379,7 @@ app.get('/dados-grafico-prefixo', async (req, res) => {
     const labels = resultDevolucoesPorPrefixo.rows.map(row => ` ${row[0]}`);
     const data = resultDevolucoesPorPrefixo.rows.map(row => row[1]);
 
-    const cores = Array.from({ length: resultDevolucoesPorPrefixo.rows.length }, () => getRandomColor())
+    const cores = getArrayOfColors(resultDevolucoesPorPrefixo.rows.length);
 
     const dadosGraficoPizza = {
       labels: labels,
@@ -427,7 +430,7 @@ app.get('/dados-grafico-tipo', async (req, res) => {
     const data = resultDevolucoesPorTipo.rows.map(row => row[1]);
 
 
-    const cores = Array.from({ length: resultDevolucoesPorTipo.rows.length }, () => getRandomColor())
+    const cores = getArrayOfColors(resultDevolucoesPorTipo.rows.length);
     const dadosGraficoPizza = {
       labels: labels,
       datasets: [{
