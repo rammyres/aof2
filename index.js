@@ -376,12 +376,14 @@ app.get('/dados-grafico-prefixo', async (req, res) => {
     const labels = resultDevolucoesPorPrefixo.rows.map(row => ` ${row[0]}`);
     const data = resultDevolucoesPorPrefixo.rows.map(row => row[1]);
 
+    const cores = Array.from({ length: resultDevolucoesPorPrefixo.rows.length }, () => getRandomColor())
+
     const dadosGraficoPizza = {
       labels: labels,
       datasets: [{
         data: data,
-        backgroundColor: Array.from({ length: resultDevolucoesPorPrefixo.rows.length }, () => getRandomColor()),
-        hoverBackgroundColor: Array.from({ length: resultDevolucoesPorPrefixo.rows.length }, () => getRandomColor()),
+        backgroundColor: cores,
+        hoverBackgroundColor: cores,
       }]
     };
 
@@ -424,12 +426,14 @@ app.get('/dados-grafico-tipo', async (req, res) => {
     const labels = resultDevolucoesPorTipo.rows.map(row => ` ${row[0]}`);
     const data = resultDevolucoesPorTipo.rows.map(row => row[1]);
 
+
+    const cores = Array.from({ length: resultDevolucoesPorTipo.rows.length }, () => getRandomColor())
     const dadosGraficoPizza = {
       labels: labels,
       datasets: [{
         data: data,
-        backgroundColor:  Array.from({ length: resultDevolucoesPorTipo.rows.length }, () => getRandomColor()),
-        hoverBackgroundColor:  Array.from({ length: resultDevolucoesPorTipo.rows.length }, () => getRandomColor()),
+        backgroundColor:  cores,
+        hoverBackgroundColor:  cores,
       }]
     };
 
