@@ -7,6 +7,15 @@ const Chart = require('chart.js');
 const app = express();
 const port = 3000;
 
+const getRandomColor = () => {
+  const letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+};
+
 app.use(express.urlencoded({ extended: true }));
 // Configuração da conexão com o banco de dados Oracle
 const dbConfig = {
@@ -370,8 +379,8 @@ app.get('/dados-grafico-prefixo', async (req, res) => {
       labels: labels,
       datasets: [{
         data: data,
-        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#8A2BE2', '#00FF7F'],
-        hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#8A2BE2', '#00FF7F']
+        backgroundColor: Array.from({ length: resultDevolucoesPorPrefixo.rows.length }, () => getRandomColor()),
+        hoverBackgroundColor: Array.from({ length: resultDevolucoesPorPrefixo.rows.length }, () => getRandomColor()),
       }]
     };
 
@@ -400,19 +409,19 @@ app.get('/dados-grafico-tipo', async (req, res) => {
     connection = await oracledb.getConnection(dbConfig);
 
     // Consulta SQL para contar devoluções por prefixo
-    const queryDevolucoesPorPrefixo = `
-      SELECT DESCRICAO, COUNT(*) AS total_devolucoes
+    const queryDevolucoesPorTipo = `
+      SELECT tipo, COUNT(*) AS total_devolucoes
       FROM AOFS
-      GROUP BY DESCRICAO
-      ORDER BY DESCRICAO
+      GROUP BY tipo
+      ORDER BY tipo
     `;
 
     // Executa a consulta SQL
-    const resultDevolucoesPorPrefixo = await connection.execute(queryDevolucoesPorPrefixo);
+    const resultDevolucoesPorTipo = await connection.execute(queryDevolucoesPorTipo);
 
     // Formatando os dados no formato necessário para o gráfico de pizza
-    const labels = resultDevolucoesPorPrefixo.rows.map(row => ` ${row[0]}`);
-    const data = resultDevolucoesPorPrefixo.rows.map(row => row[1]);
+    const labels = resultDevolucoesPorTipo.rows.map(row => ` ${row[0]}`);
+    const data = resultDevolucoesPorTipo.rows.map(row => row[1]);
 
     const dadosGraficoPizza = {
       labels: labels,
