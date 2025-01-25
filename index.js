@@ -23,7 +23,8 @@ app.use(express.urlencoded({ extended: true }));
 const dbConfig = {
   user: process.env.BD_USUARIO,
   password: process.env.BD_SENHA,
-  connectString: process.env.BD_STRING,
+  connectString: 'VACILOS',
+  // connectString: process.env.BD_STRING,
 };
 
 // Configuração do mecanismo de visualização EJS
