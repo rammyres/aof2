@@ -5,9 +5,10 @@ SERVICE_FILE="/etc/systemd/system/aof2.service"
 APP_DIR="/home/ubuntu/aof2"
 NODE_PATH=$(which node)
 
-echo "=== Criando service file em $SERVICE_FILE ==="
+echo "=== Criando service file temporário ==="
 
-sudo tee $SERVICE_FILE > /dev/null <<EOL
+TMP_FILE=$(mktemp)
+cat > "$TMP_FILE" <<EOL
 [Unit]
 Description=AOF2 Node.js Service
 After=network.target
@@ -23,6 +24,10 @@ Environment=NODE_ENV=production
 [Install]
 WantedBy=multi-user.target
 EOL
+
+echo "=== Movendo service file para /etc/systemd/system/ com sudo ==="
+sudo mv "$TMP_FILE" "$SERVICE_FILE"
+sudo chmod 644 "$SERVICE_FILE"
 
 echo "=== Recarregando systemd e habilitando serviço ==="
 sudo systemctl daemon-reload
